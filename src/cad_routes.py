@@ -108,6 +108,9 @@ api = Blueprint('api', __name__)
 @api.route('/uploadCAD', methods=['POST'])
 def uploadCAD():
     dxf_file = request.files['file']
+    folder = 'src/dxf'
+    if not os.path.exists(folder):
+        os.makedirs(folder)
     dxf_file.save(f'src/dxf/{dxf_file.filename}')
     return jsonify({'message': 'DXF file uploaded successfully'})
 
