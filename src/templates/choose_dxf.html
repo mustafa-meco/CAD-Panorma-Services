@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Select DXF File</title>
+  </head>
+  <body>
+    <h1>Select DXF File</h1>
+    <form
+      id="dxfForm"
+      action="/processCADweb"
+      method="POST"
+      enctype="multipart/form-data"
+    >
+      <label for="dxfFiles">Choose a DXF file:</label>
+      <select id="dxfFiles" name="filename" required></select
+      ><br /><br />
+      <label for="layer_name">Enter layer name:</label>
+      <input
+        type="text"
+        id="layer_name"
+        name="layer_name"
+        required
+      /><br /><br />
+
+      <input type="submit" value="Process" />
+    </form>
+
+    <script>
+      // Fetch the list of .dxf files from the server
+      fetch("/getDxfFiles")
+        .then((response) => response.json())
+        .then((data) => {
+          const select = document.getElementById("dxfFiles");
+          data.forEach((filename) => {
+            const option = document.createElement("option");
+            option.value = filename.filename;
+            option.text = filename.filename;
+            select.appendChild(option);
+          });
+        });
+    </script>
+  </body>
+</html>

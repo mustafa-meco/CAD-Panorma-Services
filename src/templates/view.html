@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Grid of Boxes</title>
+    <style>
+      .grid-container {
+        display: grid;
+        grid-template-columns: repeat(
+          auto-fill,
+          100px
+        ); /* Adjust box size as needed */
+        grid-gap: 5px;
+        padding: 10px;
+      }
+
+      .box {
+        width: 100%;
+        height: 100px; /* Adjust box size as needed */
+        background-color: lightblue;
+        border: 1px solid #000;
+        transition: background-color 0.3s ease-in-out;
+        cursor: pointer;
+      }
+
+      .box:hover {
+        background-color: lightgreen;
+      }
+      .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5); /* Adjust opacity as needed */
+        z-index: 1000; /* Ensure the overlay is above other elements */
+      }
+
+      .modal-container {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: white;
+        padding: 20px;
+        z-index: 1001; /* Ensure the modal is above the overlay */
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5); /* Add shadow for depth */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="grid-container" id="gridContainer"></div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const gridContainer = document.getElementById("gridContainer");
+
+        // Load grouped data from grouped_data.json
+        fetch("/getJsonFile")
+          .then((response) => response.json())
+          .then((groupedData) => {
+            // Create boxes based on grouped data
+            groupedData.forEach((entry) => {
+              const box = document.createElement("div");
+              box.className = "box";
+              box.textContent = `ID: ${entry.id}, Row: ${
+                entry.row
+              }, Column: ${Math.round(entry.column)}, Group: ${
+                entry.group
+              }, gps: ${entry.gps}`;
+              console.log(entry.gps.gps_coordinates);
+              box.style.gridColumn = Math.round(entry.column) + 1; // Adjust index as needed
+              box.style.gridRow = entry.row + 1; // Adjust index as needed
+              box.dataset.group = entry.group; // Store group number in dataset
+              box.addEventListener("click", () => {
+                // Create overlay to darken background
+                const overlay = document.createElement("div");
+                overlay.className = "overlay";
+                document.body.appendChild(overlay);
+
+                // Create modal container
+                const modalContainer = document.createElement("div");
+                modalContainer.className = "modal-container";
+
+                // Create modal content
+                const modalContent = document.createElement("div");
+                modalContent.className = "modal-content";
+
+                // Create close button
+                const closeButton = document.createElement("span");
+                closeButton.className = "close-button";
+                closeButton.textContent = "X";
+                closeButton.addEventListener("click", () => {
+                  modalContainer.remove();
+                  overlay.remove(); // Remove overlay on modal close
+                });
+
+                // Create data display
+                const dataDisplay = document.createElement("div");
+                dataDisplay.textContent = `Clicked on Row: ${entry.row}, Column: ${entry.column}, Group: ${entry.group}`;
+
+                // Create image 1
+                const image1 = document.createElement("img");
+                image1.src = "/static/images/image1.jpg";
+
+                // Create image 2
+                const image2 = document.createElement("img");
+                image2.src = "/static/images/image2.jpg";
+
+                // Create gps data display
+                const gpsDataDisplay = document.createElement("div");
+                gpsDataDisplay.textContent = `\n GPS Coordinates (top left): \n long: ${entry.gps.gps_coordinates.top_left.longitude} \n lat: ${entry.gps.gps_coordinates.top_left.latitude} \n GPS Coordinates (bottom right): \n long: ${entry.gps.gps_coordinates.bottom_right.longitude} \n lat: ${entry.gps.gps_coordinates.bottom_right.latitude}`;
+
+                // Append gps data display to modal content
+                modalContent.appendChild(gpsDataDisplay);
+
+                // Append elements to modal content
+                modalContent.appendChild(closeButton);
+                modalContent.appendChild(dataDisplay);
+                modalContent.appendChild(image1);
+                modalContent.appendChild(image2);
+
+                // Append modal content to modal container
+                modalContainer.appendChild(modalContent);
+
+                // Append modal container to body
+                document.body.appendChild(modalContainer);
+              });
+              gridContainer.appendChild(box);
+            });
+
+            // Color boxes based on their group
+            const groupColors = [
+              "red",
+              "blue",
+              "green",
+              "yellow",
+              "orange",
+              "purple",
+              "pink",
+              "brown",
+              "cyan",
+            ]; // Add more colors if needed
+            const boxes = document.querySelectorAll(".box");
+            boxes.forEach((box) => {
+              const groupNumber = box.dataset.group;
+              box.style.backgroundColor =
+                groupColors[groupNumber % groupColors.length];
+            });
+          })
+          .catch((error) =>
+            console.error("Error loading grouped data:", error)
+          );
+      });
+    </script>
+  </body>
+</html>

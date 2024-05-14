@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DXF Viewer</title>
+    <!-- Include Plotly.js from CDN -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+      .plotly-hover-text {
+        font-size: 12px;
+        background-color: rgba(255, 255, 255, 0.9);
+        border: 1px solid #ddd;
+        padding: 5px;
+        border-radius: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>DXF Viewer</h1>
+    <div id="plot"></div>
+
+    <script>
+      // Load JSON data and plot squares using Plotly.js
+      fetch("/getJsonFile", {
+        method: "POST",
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          const squares = data.map((square) => ({
+            type: "scatter",
+            x: [
+              square[0][0],
+              square[1][0],
+              square[2][0],
+              square[3][0],
+              square[0][0],
+            ],
+            y: [
+              square[0][1],
+              square[1][1],
+              square[2][1],
+              square[3][1],
+              square[0][1],
+            ],
+            mode: "lines",
+            line: { color: "blue" },
+          }));
+
+          const layout = {
+            title: "DXF Viewer",
+            xaxis: { title: "X Axis" },
+            yaxis: { title: "Y Axis" },
+          };
+
+          Plotly.newPlot("plot", squares, layout);
+
+          // Add hover event to show shadow
+          const plot = document.getElementById("plot");
+          plot.on("plotly_hover", function (data) {
+            const curveNumber = data.points[0].curveNumber;
+            const curve = plot.data[curveNumber];
+            Plotly.restyle(
+              "plot",
+              {
+                line: { color: "blue", width: 1 },
+                hoverinfo: "none",
+              },
+              [curveNumber]
+            );
+            Plotly.restyle(
+              "plot",
+              {
+                line: { color: "black", width: 3 },
+                hoverinfo: "text",
+                text: ["Square " + (curveNumber + 1)],
+              },
+              [curveNumber]
+            );
+          });
+
+          plot.on("plotly_unhover", function () {
+            Plotly.restyle("plot", {
+              line: { color: "blue", width: 1 },
+              hoverinfo: "none",
+            });
+          });
+        })
+        .catch((error) => console.error("Error:", error));
+    </script>
+  </body>
+</html>
