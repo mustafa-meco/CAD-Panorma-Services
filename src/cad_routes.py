@@ -116,13 +116,22 @@ def uploadCAD():
 
 @api.route('/processCAD', methods=['POST'])
 def processCAD():
-    dxf_filename = request.form['filename']
-    layer_name = request.form['layer_name']
+    print("request is:  ", request.form)
+    dxf_filename = request.get_json()['filename']
+    layer_name = request.get_json()['layer_name']
     modelspace = read_dxf_file(f"src/dxf/{dxf_filename}")
     lwpolylines = extract_lwpolylines_from_layer(modelspace, layer_name)
     current_time = datetime.datetime.now()
     day_and_time = current_time.strftime("%A_%H_%M")
     save_lwpolylines_to_json(lwpolylines, f"src/jsons/lwpolylines-{day_and_time}.json")
+    save_lwpolylines_to_json(lwpolylines, f"src/data.json")
+    map_points_to_origin('src/data.json', 'src/data.json')
+    group_modules_by_row_and_consequent_columns('src/data.json', 'src/data.json', dxf_filename == "Packing - PV - 02 - REV 4_dwg.dxf")
+    add_gpsdata('src/data.json', 'src/gps_data.json', 'src/data.json')
+    # read data from json file and return it
+    with open("src/data.json", 'r') as f:
+        lwpolylines = json.load(f)
+        
     return jsonify(lwpolylines)
 
 @api.route('/processUploadCAD', methods=['POST'])
@@ -136,6 +145,10 @@ def processUploadCAD():
     current_time = datetime.datetime.now()
     day_and_time = current_time.strftime("%A_%H_%M")
     save_lwpolylines_to_json(lwpolylines, f"src/jsons/lwpolylines-{day_and_time}.json")
+    save_lwpolylines_to_json(lwpolylines, f"src/data.json")
+    map_points_to_origin('src/data.json', 'src/data.json')
+    group_modules_by_row_and_consequent_columns('src/data.json', 'src/data.json', dxf_filename == "Packing - PV - 02 - REV 4_dwg.dxf")
+    add_gpsdata('src/data.json', 'src/gps_data.json', 'src/data.json')
     return jsonify(lwpolylines)
 
 @api.route('/getDxfFiles', methods=['GET'])
