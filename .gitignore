@@ -5,3 +5,4 @@ dxf
 *.dxf
 **/dxf/
 src/dxf
+**/rgb

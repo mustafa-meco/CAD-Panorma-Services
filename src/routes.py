@@ -16,4 +16,5 @@ def index():
 
 
 from src.cad_routes import *
+from src.rgb_routes import *
 

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Upload Folder</title>
+  </head>
+  <body>
+    <h1>Upload a Folder of Images</h1>
+    <form
+      action="{{ url_for('upload_RGB') }}"
+      method="post"
+      enctype="multipart/form-data"
+    >
+      <label for="foldername">Row Number:</label>
+      <input type="text" id="foldername" name="foldername" required />
+      <br /><br />
+      <label for="file">Select a zip file:</label>
+      <input type="file" id="file" name="file" accept=".zip" required />
+      <br /><br />
+      <input type="submit" value="Upload" />
+    </form>
+    <button onclick="window.location.href = '{{ url_for('select_folder') }}'">
+      Select Folder
+    </button>
+    {% with messages = get_flashed_messages() %} {% if messages %}
+    <ul>
+      {% for message in messages %}
+      <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %} {% endwith %}
+  </body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Select Folder</title>
+  </head>
+  <body>
+    <h1>Select a Folder to Process</h1>
+    <form action="{{ url_for('process_folder') }}" method="post">
+      <label for="foldername">Choose a folder:</label>
+      <select id="foldername" name="foldername" required>
+        {% for folder in folders %}
+        <option value="{{ folder }}">{{ folder }}</option>
+        {% endfor %}
+      </select>
+      <br /><br />
+      <input type="submit" value="Process" />
+    </form>
+    <br />
+    <a href="{{ url_for('uploadHome') }}">Go back to Upload Page</a>
+    <a href="/show_image/foldername">Show image</a>
+    {% with messages = get_flashed_messages() %} {% if messages %}
+    <ul>
+      {% for message in messages %}
+      <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %} {% endwith %}
+  </body>
+</html>
