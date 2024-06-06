@@ -24,7 +24,7 @@ class SiftMatching:
     _circ_thickness = 2
 
 
-    def __init__(self, img_1_path, img_2_path, results_fldr='/kaggle/working/', nfeatures=500, gamma=0.8, resize = True, distortion = True):
+    def __init__(self, img_1_path, img_2_path, results_fldr='/kaggle/working/', nfeatures=500, gamma=0.8, resize = True, distortion = True, rotate90 = False):
 
         fname_1 = os.path.basename(img_1_path)
         fname_2 = os.path.basename(img_2_path)
@@ -39,14 +39,16 @@ class SiftMatching:
         if not os.path.exists(self.result_fldr):
             os.makedirs(self.result_fldr)
 
-        self.img_1_bgr = self.read_image(img_1_path, resize, distortion)
-        self.img_2_bgr = self.read_image(img_2_path, resize, distortion)
+        self.img_1_bgr = self.read_image(img_1_path, resize, distortion, rotate90)
+        self.img_2_bgr = self.read_image(img_2_path, resize, distortion, rotate90)
 
         self.nfeatures = nfeatures
         self.gamma = gamma
 
 
-    def read_image(self, img_path, resize = True, distortion = True):
+    def read_image(self, img_path, resize = True, distortion = True, rotate90 = False):
+
+        
 
         if distortion:
             img_bgr = remove_distortion(cv2.imread(img_path, cv2.IMREAD_COLOR))
@@ -55,6 +57,11 @@ class SiftMatching:
         
         if resize:
             img_bgr = cv2.resize(img_bgr,(640,480))
+
+        if rotate90:
+            img_bgr = cv2.rotate(img_bgr, cv2.ROTATE_90_CLOCKWISE)
+            print("Rotated image")
+            # cv2.imwrite("img_path.jpg", img_bgr)
 
         return img_bgr
 

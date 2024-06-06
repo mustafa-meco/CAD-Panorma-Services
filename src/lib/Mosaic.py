@@ -25,7 +25,7 @@ class GenerateMosaic:
 
 
 
-    def mosaic(self, nfeatures=2000, gamma=0.6, resize=True, distortion=True):
+    def mosaic(self, nfeatures=2000, gamma=0.6, resize=True, distortion=True, rotate90=False):
 
         H_all = {}
         siftmatch_obj = None
@@ -40,7 +40,7 @@ class GenerateMosaic:
             img_2_path = os.path.join(self.parent_folder, self.img_name_list[i + 1])
 
             # Get SIFT descriptors
-            siftmatch_obj = SiftMatching(img_1_path, img_2_path, results_fldr=self.result_folder, nfeatures=2000, gamma=0.6, resize=resize, distortion=distortion)
+            siftmatch_obj = SiftMatching(img_1_path, img_2_path, results_fldr=self.result_folder, nfeatures=2000, gamma=0.6, resize=resize, distortion=distortion, rotate90=rotate90)
             correspondence = siftmatch_obj.run()
 
             # Run RANSAC to remove outliers

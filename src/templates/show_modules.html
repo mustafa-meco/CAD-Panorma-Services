@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Show Image</title>
+  </head>
+  <body>
+    <h1>Final panels</h1>
+    <form action="/process_click/{{foldername}}" method="post">
+      <label for="image">Image:</label>
+      <input
+        type="image"
+        name="image"
+        src="..\{{processed_image_path}}"
+        alt="Mosaic Image"
+      /><br /><br />
+    </form>
+    <br /><br />
+    <a href="{{ url_for('select_folder') }}">Go back to Folder Selection</a>
+    <br />
+    <a href="{{ url_for('index') }}">Go back to Upload Page</a>
+    {% with messages = get_flashed_messages() %} {% if messages %}
+    <ul>
+      {% for message in messages %}
+      <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %} {% endwith %}
+  </body>
+</html>
