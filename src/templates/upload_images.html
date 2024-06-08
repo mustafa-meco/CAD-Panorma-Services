@@ -19,7 +19,7 @@
       <br /><br />
       <input type="submit" value="Upload" />
     </form>
-    <button onclick="window.location.href = '{{ url_for('select_folder') }}'">
+    <button onclick="window.location.href = '{{ url_for(\'select_folder\') }}'">
       Select Folder
     </button>
     {% with messages = get_flashed_messages() %} {% if messages %}
