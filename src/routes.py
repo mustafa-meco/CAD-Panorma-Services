@@ -6,7 +6,7 @@ from flask import Blueprint
 from flask_cors import CORS
 
 # main blueprint to be registered with application
-api = Blueprint('api', __name__)
+
 CORS(app)
 
 @app.route('/')

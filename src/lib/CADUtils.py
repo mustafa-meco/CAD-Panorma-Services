@@ -289,7 +289,9 @@ def add_gpsdata(json_file, gps_data_jsonfile, outputfile):
         if not flag:
             objects_to_remove.append(i)
         flag=False
-    lwpolylines_objects = lwpolylines_objects[:min(objects_to_remove)]
+    
+    if objects_to_remove:
+        lwpolylines_objects = lwpolylines_objects[:min(objects_to_remove)]
     
     with open(outputfile, 'w') as f:
         json.dump(lwpolylines_objects, f, indent=4)

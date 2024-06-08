@@ -119,6 +119,9 @@ def processCAD():
     print("request is:  ", request.form)
     dxf_filename = request.get_json()['filename']
     layer_name = request.get_json()['layer_name']
+    gps_coordinates = request.get_json()['gps_coordinates']
+    with open('src/gps_data.json', 'w') as f:
+        json.dump(gps_coordinates, f)
     modelspace = read_dxf_file(f"src/dxf/{dxf_filename}")
     lwpolylines = extract_lwpolylines_from_layer(modelspace, layer_name)
     current_time = datetime.datetime.now()

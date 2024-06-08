@@ -14,11 +14,24 @@
         {% endfor %}
       </select>
       <br /><br />
-      <input type="submit" value="Process" />
+      <label for="resize"
+        >Need Resize (faster processing, but lower quality):</label
+      >
+      <input type="checkbox" id="resize" name="resize" />
+      <br /><br />
+      <label for="distortion">Are images distorted:</label>
+      <input type="checkbox" id="distortion" name="distortion" value="on" />
+      <br /><br />
+      <label for="rotate90"
+        >Do you want to rotate images 90 degrees clockwise:</label
+      >
+      <input type="checkbox" id="rotate90" name="rotate90" />
+      <br /><br />
+      <input type="submit" value="Submit" />
     </form>
     <br />
     <a href="{{ url_for('uploadHome') }}">Go back to Upload Page</a>
-    <a href="/show_image/foldername">Show image</a>
+
     {% with messages = get_flashed_messages() %} {% if messages %}
     <ul>
       {% for message in messages %}

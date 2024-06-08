@@ -6,7 +6,35 @@
   </head>
   <body>
     <h1>Final Mosaic Image</h1>
-    {{ image_path }}
+    <form action="/panels_rgb/{{foldername}}" method="post">
+      <label for="mod_area">min_module_area:</label>
+      <input
+        type="number"
+        id="mod_area"
+        name="mod_area"
+        value="5000"
+        required
+      /><br /><br />
+
+      <label for="max_non_com">max_non_complete_percentage 2:</label>
+      <input
+        type="number"
+        id="max_non_com"
+        name="max_non_com"
+        value="100"
+        required
+      /><br /><br />
+
+      <label for="image_path">Image Path:</label>
+      <input
+        type="text"
+        id="image_path"
+        name="image_path"
+        value="{{image_path}}"
+      /><br /><br />
+
+      <input type="submit" value="Submit" />
+    </form>
 
     <img src="..\{{image_path   }}" alt="Mosaic Image" />
     <br /><br />
